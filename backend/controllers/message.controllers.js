@@ -1,5 +1,6 @@
 import ConversationModel from "../models/conversation.model.js";
 import MessageModel from "../models/message.model.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
 export const sendMessage = async (req,res)=>{
     try {
@@ -28,10 +29,15 @@ export const sendMessage = async (req,res)=>{
         if(newMessage){
             conversation.messages.push(newMessage._id)
         }
-
-        /// Socket ici 
         
         await Promise.all([conversation.save(), newMessage.save()])
+
+        /// Socket ici 
+        const receiverSocketId = getReceiverSocketId(receiverId)
+
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage", newMessage)
+        }
 
         res.status(201).json(newMessage)
     } catch (error) {
@@ -53,10 +59,11 @@ export const getMessages = async (req,res)=>{
 
         if(!conversation){
             res.status(200).json([]);
+        }else{
+            const messages = conversation.messages;
+            res.status(200).json(messages);
         }
         
-        const messages = conversation.messages;
-        res.status(200).json(messages);
         
     } catch (error) {
         console.log("Error lors de la recuperation des messages : ",error.message);

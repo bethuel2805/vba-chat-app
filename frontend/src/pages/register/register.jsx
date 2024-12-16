@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import useRegister from "../../hooks/useRegister";
 
 const Register = () => {
     const [inputs, setInputs] = useState({
@@ -7,6 +9,15 @@ const Register = () => {
 		password: "",
 		confirmPassword: "",
 	});
+
+    const {loading,register} = useRegister()
+
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+
+        await register(inputs)
+        
+    }
   return (
     <div className='flex flex-col items-center justify-center min-w-96 mx-auto'>
         <div className='w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
@@ -14,7 +25,7 @@ const Register = () => {
                 Inscription <span className='text-orange-500'> VBA-Chat</span>
             </h1>
 
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div>
                     <label className='label p-2'>
                         <span className='text-base label-text'>Username</span>
@@ -68,17 +79,16 @@ const Register = () => {
                 </div>
 
 
-                <a
+                <Link to="/login"
                     className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'
                     href='#'
                 >
                     Already have an account?
-                </a>
+                </Link>
 
                 <div>
                     <button className='btn btn-block btn-sm mt-2 border border-slate-700'>
-                        S`inscrire
-                        {/* {loading ? <span className='loading loading-spinner'></span> : "Sign Up"} */}
+                        {loading ? <span className='loading loading-spinner'></span> : "S`inscrire"}
                     </button>
                 </div>
             </form>
