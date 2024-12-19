@@ -15,6 +15,8 @@ const useGetConversations = () => {
 					throw new Error(data.error);
 				}
 				setConversations(data);
+				console.log("Un toto de plus 1");
+				
 			} catch (error) {
 				toast.error(error.message);
 			} finally {

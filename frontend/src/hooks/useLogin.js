@@ -21,6 +21,7 @@ const useLogin = () => {
 			if (data.error) {
 				throw new Error(data.error);
 			}
+			console.log("Un toto de plus 3");
 
 			localStorage.setItem("chat-user", JSON.stringify(data));
 			setAuthUser(data);
